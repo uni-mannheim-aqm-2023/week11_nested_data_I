@@ -2,8 +2,8 @@
 title: "AQM Week 11 -- Nested Data I"
 author: 
   - Oliver Rittmann
-  - Viktoriia Semenova
-date: "May 12, 2022"
+  - Domantas Undzėnas
+date: "May 11, 2023"
 output:
   html_document:
     toc: true
