@@ -83,7 +83,9 @@ The goal for the next two session is to become familiar with the basic concepts 
     + Unit Fixed Effects and Time Fixed Effects
     + One-way and two-way fixed effects regression
   + Random Effects
+  + Mixed Effects
   + Multi-Level Regression
+  + Pooling, no pooling, and partial pooling
 
 Ultimately, you will learn how to make an informed choice about which model to use when you work with some sort of nested data.
 
@@ -160,13 +162,11 @@ We have the following variables:
   + `country` = country
   + `year` = election year
   + `vote_share_cab` = % votes won by cabinet parties
-  + `vote_share_cab_tmin1` = % votes at previous election by cabinet
-parties
+  + `vote_share_cab_tmin1` = % votes at previous election by cabinet parties
   + `satislfe_survey_mean` = Life Satisfaction, Country-Survey mean (1-4 scale)
   + `parties_ingov` = Number of parties in government
   + `seatshare_cabinet` = % seats held by governing coalition
-  + `cab_ideol_sd` = Gov Ideologial Disparity (Standard deviation of government party
-left-right scale)
+  + `cab_ideol_sd` = Gov Ideologial Disparity (Standard deviation of government party positions on left-right scale)
   + `ENEP_tmin1` = Party Fractionalisation - Last Election (Gallagher Fractionalization Index)
 
 This is time-series cross-section data: We observe multiple elections in different (european) countries, i.e. elections are nested in countries.
@@ -223,6 +223,8 @@ This approach is sometimes called **complete pooling**, because we throw all the
 
 Thus, with the pooled regression model **we do not solve the issue of potential omitted confounders, neither on the country level (time-invariant), nor on the election level (time-varying)**. The resulting estimates will very likely suffer from omitted variable bias.
 
+Also, some model assumptions will be difficult to justify. Think of independence: Are individual observations really independent from one another? In this case, we'd like to ask ourselves whether, for example, the cabinet vote share in Italy 1979 is really independent of the cabinet vote share in Italy 1983.
+
 _Side-question_: If "complete pooling" means to throw all data into one pool and fit the regression model, what could "no pooling" mean?
 
 ### Step 2: Fixed Effects Model
@@ -250,7 +252,7 @@ All that we do is to include $N - 1$ country dummies in the regression equation.
 
 Or more generally:
 
-By including unit fixed effects, we implicitely account for (unobserved) time-invariant unit level confounding variables
+By including unit fixed effects, we implicitly account for (unobserved) time-invariant unit level confounding variables.
 
 Thus, once we include unit fixed effects in our model, we do not have to worry about potential time-invariant confounders on the country level anymore. In fact, we cannot include them anymore--even if we wanted to.
 
@@ -413,7 +415,7 @@ summary(fe_1)
 
 At first glance, the effect size seems to be huge: One unit increase in average life satisfaction seems to lead to an 18 percentage points increase in cabinet vote share. But how plausibel is a one unit increase in average life satisfaction?
 
-In an important article, [Mummolo and Peterson (PSRM, 2018)](https://www.cambridge.org/core/journals/political-science-research-and-methods/article/improving-the-interpretation-of-fixed-effects-regression-results/4145615389057E25D4B46D44AC9CB89C) point out that we must be very careful in specifying plausibel changes in the independent variable when using fixed effects regression. 
+In an important article, [Mummolo and Peterson (PSRM, 2018)](https://www.cambridge.org/core/journals/political-science-research-and-methods/article/improving-the-interpretation-of-fixed-effects-regression-results/4145615389057E25D4B46D44AC9CB89C) point out that we must be very careful in specifying plausible changes in the independent variable when using fixed effects regression. 
 
 Let's say we want to learn about the change in cabinet vote share when there is a one standard deviation increase in average life satisfaction. Because we by including country fixed effects we eliminated all between country variation of our variables, in order to calculate this standard deviation, we have to use the de-meaned variable of average live satisfaction. Otherwise it is possible that we calculate the first difference between two scenarios that would never plausibly occur *within* countries. 
 
@@ -483,7 +485,9 @@ sim_function <- function(lm_obj, nsim = 1000, scenario){
 
 ## Concluding Remarks:
 
-Next week, we will talk about Random Effects and Multi-Level Models.
+- Next week, we will talk about Random Effects and Multi-Level Models.
 
-Don't forget the (final!) homework assignment.
+- Don't forget the (final!) homework assignment.
+
+- Please participate in the course evaluation :)
 
