@@ -1,5 +1,5 @@
 
-# This R scripts entails all data preperation for the lab.
+# This R scripts entails all data preparation for the lab.
 # You can have a look in case you are interested.
 
 
