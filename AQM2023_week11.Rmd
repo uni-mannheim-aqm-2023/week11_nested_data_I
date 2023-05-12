@@ -154,7 +154,7 @@ Ward is interested in a quite straightforward question: *Is Happiness a Predicto
 ```{r}
 load("raw-data/ward_macro.Rdata")
 
-dta
+head(dta)
 ```
 
 We have the following variables:
@@ -477,11 +477,90 @@ sim_function <- function(lm_obj, nsim = 1000, scenario){
 }
 ```
 
-```{r}
+Correct way:
 
+```{r}
+mean_satis <- mean(dta$satislfe_survey_mean)
+satis_high <- mean_satis + sd(dta$demeaned_satis)
+
+scenario1 <- c(1, mean_satis, rep(0, 14))
+scenario2 <- c(1, satis_high, rep(0, 14))
+
+ev1 <- sim_function(lm_obj = fe_1,
+                    nsim = 10000,
+                    scenario = scenario1)
+ev2 <- sim_function(lm_obj = fe_1,
+                    nsim = 10000,
+                    scenario = scenario2)
+fd <- ev2 - ev1
+
+mean_fd <- mean(fd)
+ci_fd <- quantile(fd, c(0.025, 0.975))
+```
+
+Incorrect way
+
+```{r}
+mean_satis_f <- mean(dta$satislfe_survey_mean)
+satis_high_f <- mean_satis_f + sd(dta$satislfe_survey_mean)
+
+scenario1_f <- c(1, mean_satis_f, rep(0, 14))
+scenario2_f <- c(1, satis_high_f, rep(0, 14))
+
+ev1_f <- sim_function(lm_obj = fe_1,
+                      nsim = 10000,
+                      scenario = scenario1_f)
+ev2_f <- sim_function(lm_obj = fe_1,
+                      nsim = 10000,
+                      scenario = scenario2_f)
+
+fd_f <- ev2_f - ev1_f
+
+mean_fd_f <- mean(fd_f)
+ci_fd_f <- quantile(fd_f, c(0.025, 0.975))
 ```
 
 
+
+```{r}
+par(mfrow = c(1, 2))
+
+plot(x = 0,
+     y = mean_fd,
+     ylim = c(-10, 15),
+     pch = 19,
+     cex = 2,
+     bty = "n",
+     las = 1,
+     main = "First Difference (one SD within)",
+     ylab = "First Difference",
+     xlab = "",
+     xaxt = "n")
+segments(x0 = 0, x1 = 0,
+         y0 = ci_fd[1], y1 = ci_fd[2],
+         lwd = 2)
+abline(h = 0,
+       lty = "dashed")
+
+plot(x = 0,
+     y = mean_fd_f,
+     ylim = c(-10, 15),
+     pch = 19,
+     cex = 2,
+     bty = "n",
+     las = 1,
+     main = "First Difference (one SD total)",
+     ylab = "First Difference",
+     xlab = "",
+     xaxt = "n")
+segments(x0 = 0, x1 = 0,
+         y0 = ci_fd_f[1], y1 = ci_fd_f[2],
+         lwd = 2)
+abline(h = 0,
+       lty = "dashed")
+
+
+```
 
 ## Concluding Remarks:
 
